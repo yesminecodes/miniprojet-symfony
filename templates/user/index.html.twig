@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block body %}
+<div class="categories-page">
+
+    <h1>
+        Users
+    </h1>
+
+    {% include 'layouts/_flash_message.html.twig' %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.firstName }}</td>
+                    <td>{{ user.lastName }}</td>
+
+                    <td>{{ user.email }}</td>
+
+                    <td>
+                        {% if 'ROLE_ADMIN' in user.roles %}
+                            <span class="badge bg-danger">Admin</span>
+                        {% elseif 'ROLE_EDITOR' in user.roles %}
+                            <span class="badge bg-primary">Editor</span>
+                        {% else %}
+                            <span class="badge bg-secondary">User</span>
+                        {% endif %}
+                    
+                    </td>
+
+                    <td>
+                        {% if ('ROLE_ADMIN' in user.roles) == false %}
+                            {% if ('ROLE_EDITOR' in user.roles) == false %}
+                                <a onclick="return confirm('Are you sure you want to make this user an editor?');" href="{{ path('app_user_to_editor', {'id': user.id}) }}" class="btn-primary">Make Editor</a>
+                            {% else %}
+                                <a onclick="return confirm('Are you sure you want to remove the editor role from this user?');" href="{{ path('app_user_remove_editor', {'id': user.id}) }}" class="btn-danger">Remove Editor Role</a>
+                            {% endif %}
+                            <a onclick="return confirm('Are you sure you want to delete this user?');" href="{{ path('app_user_remove', {'id': user.id}) }}" class="btn-danger">Delete</a>
+                        {% endif %}
+                    </td>
+
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">No users found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

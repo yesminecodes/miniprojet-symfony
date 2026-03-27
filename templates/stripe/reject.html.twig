@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Payment Rejected{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Your payment was rejected.</h1>
+    <a href="{{ path('app_order') }}" class="btn btn-primary mt-3">Return to my orders</a>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product index{% endblock %}
+
+{% block body %}
+<div class="categories-page">
+
+    <h1>
+        Product List
+        <a href="{{ path('app_product_new') }}" class="btn btn-success">+ Create</a>
+    </h1>
+    {% include 'layouts/_flash_message.html.twig' %}
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td><strong>{{ product.name }}</strong></td>
+                <td>{{ product.description | slice(0,50) }}...</td>
+                <td>{{ product.price }} €</td>
+                <td>
+                    {% if product.stock > 0 %}
+                        <span class="badge bg-success">{{ product.stock }} in stock</span>
+                    {% else %}
+                        <span class="badge bg-danger">Stock exhausted</span>
+                    {% endif %}
+                </td>
+                <td style="display:flex; gap:8px;">
+                    <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-primary">Show</a>
+                    <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="btn btn-primary">Edit</a>
+                    <a href="{{ path('app_product_add_stock', {'id': product.id}) }}" class="btn btn-info" style="color: white;">
+        + Stock
+    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" style="text-align:center; padding:20px;">
+                    No records found 
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

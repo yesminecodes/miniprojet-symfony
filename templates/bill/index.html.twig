@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>invoice #{{ order.id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<div style="max-width: 900px; margin: auto;">
+
+    <h1>My Shop — Invoice #{{ order.id }}</h1>
+    <hr>
+    <p><strong>Order Date :</strong> {{ order.createdAt|date('d/m/Y H:i') }}</p>
+    <br>
+
+    <h5>Customer Information</h5>
+    <table>
+        <thead>
+            <tr>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>City</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ order.firstName }}</td>
+                <td>{{ order.lastName }}</td>
+                <td>{{ order.phone }}</td>
+                <td>{{ order.address }}</td>
+                <td>{{ order.city.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+
+    <h5>Order Contents</h5>
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for orderProduct in order.orderProducts %}
+            <tr>
+                <td>{{ orderProduct.product.name }}</td>
+                <td>{{ orderProduct.product.price }} €</td>
+                <td>{{ orderProduct.qte }}</td>
+                <td>{{ orderProduct.product.price * orderProduct.qte }} €</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+
+    <p><strong>Shipping Cost :</strong> {{ order.city.shippingCost }} €</p>
+    <h2>Total Amount : {{ order.totalPrice }} €</h2>
+
+</div>
+</body>
+</html>

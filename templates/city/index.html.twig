@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}City Index{% endblock %}
+
+{% block body %}
+<div class="container categories-page mt-5">
+    <h1>
+        Cities
+        <a href="{{ path('app_city_new') }}" class="btn btn-success">+ New City</a>
+    </h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Shipping Cost</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for city in cities %}
+            <tr>
+                <td>{{ city.id }}</td>
+                <td>{{ city.name }}</td>
+                <td>{{ city.shippingCost }} DT</td>
+                <td class="text-end">
+                    <a href="{{ path('app_city_show', {'id': city.id}) }}" class="btn btn-primary btn-sm">Show</a>
+                    <a href="{{ path('app_city_edit', {'id': city.id}) }}" class="btn btn-primary btn-sm">Edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4" class="text-center py-4">No cities found.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

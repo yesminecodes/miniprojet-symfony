@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add Stock{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Add Stock for : <strong>{{ product.name }}</strong></h1>
+    <p>Current Stock : {{ product.stock }}</p>
+
+    <hr>
+
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.quantity, {'label': 'Quantity to add', 'attr': {'placeholder': 'E.g.: 10'}}) }}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">Update Stock</button>
+        <a href="{{ path('app_product_index') }}" class="btn btn-secondary mt-3">Cancel</a>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

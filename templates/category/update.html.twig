@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Update Category{% endblock %}
+
+{% block body %}
+<div class="container">
+    <form class="login-form" method="post">
+        <h1 class="h3 mb-3 font-weight-normal">Update Category</h1>
+
+        {% if form.vars.errors|length > 0 %}
+            <div class="alert alert-danger">
+                {{ form_errors(form) }}
+            </div>
+        {% endif %}
+
+        <div class="mb-3">
+            {{ form_label(form.name) }}
+            {{ form_widget(form.name, { 'attr': {'class': 'form-control', 'placeholder': 'Category Name'} }) }}
+            {{ form_errors(form.name) }}
+        </div>
+
+        {{ form_widget(form._token) }}
+
+        <button type="submit" class="btn btn-lg btn-primary">Update</button>
+    </form>
+</div>
+{% endblock %}

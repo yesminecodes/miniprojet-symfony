@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>
+        Checkout
+        <a href="{{ path('app_cart') }}" class="btn btn-primary btn-sm">Back to Cart</a>
+    </h1>
+
+    <div class="row g-5">
+        <div class="col-md-8">
+            <p class="text-uppercase fw-bold text-muted mb-3">Delivery Information</p>
+
+            {{ form_start(form) }}
+                <div class="row g-3 mb-3">
+                    <div class="col-6">{{ form_row(form.firstName, {'label':'First Name'}) }}</div>
+                    <div class="col-6">{{ form_row(form.lastName, {'label':'Last Name'}) }}</div>
+                </div>
+
+                <div class="mb-3">{{ form_row(form.phone, {'label':'Phone Number'}) }}</div>
+                <div class="mb-3">{{ form_row(form.address, {'label':'Full Address'}) }}</div>
+
+                <div class="mb-4">
+                    {{ form_row(form.city, {'label':'Destination City'}) }}
+                    <small class="text-muted">Shipping fees will be calculated based on the selected city.</small>
+                </div>
+
+                <button type="submit" class="btn btn-success">Confirm Order</button>
+            {{ form_end(form) }}
+        </div>
+
+        <div class="col-md-4">
+            <p class="text-uppercase fw-bold text-muted mb-3">Order Summary</p>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>Products subtotal</td>
+                        <td class="text-end fw-bold">{{ total|number_format(2, ',', ' ') }} €</td>
+                    </tr>
+                    <tr>
+                        <td>Shipping fees</td>
+                        <td class="text-end">
+                            <span id="shipping-fee" style="color:blue; font-weight:600;" data-total-products="{{ total }}">
+                                Select a city
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold fs-5">Total</td>
+                        <td class="text-end fw-bold fs-5 text-danger" id="grand-total">
+                            {{ total|number_format(2, ',', ' ') }} €
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(function() {
+    const $citySelect = $('#{{ form.city.vars.id }}');
+    const $shippingFee = $('#shipping-fee');
+    const $grandTotal = $('#grand-total');
+    const totalProducts = parseFloat($shippingFee.data('total-products'));
+
+    $citySelect.on('change', function() {
+        const cityId = $(this).val();
+
+        if (!cityId) {
+            $shippingFee.text("Select a city");
+            $grandTotal.text(totalProducts.toFixed(2).replace('.', ',') + " €");
+            return;
+        }
+
+        $shippingFee.text("Calculating...");
+
+        const urlTemplate = "{{ path('app_shipping_cost', {'id':'CITY_ID'}) }}";
+        const url = urlTemplate.replace('CITY_ID', cityId);
+
+        $.getJSON(url, function(response) {
+            if(response.status === 200){
+                const shippingCost = parseFloat(response.content);
+                $shippingFee.text(shippingCost.toFixed(2).replace('.', ',') + " €");
+
+                const grandTotal = totalProducts + shippingCost;
+                $grandTotal.text(grandTotal.toFixed(2).replace('.', ',') + " €");
+            } else {
+                $shippingFee.text("Error calculating fees");
+            }
+        }).fail(function() {
+            $shippingFee.text("Error calculating fees");
+        });
+    });
+});
+</script>
+{% endblock %}

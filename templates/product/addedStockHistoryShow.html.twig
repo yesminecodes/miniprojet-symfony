@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Stock History: {{ product.name }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Stock History for: <strong>{{ product.name }}</strong></h1>
+        <a href="{{ path('app_product_index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Current Inventory Status</h5>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">Total available units:</p>
+                    <h3 class="{% if product.stock > 0 %}text-success{% else %}text-danger{% endif %}">
+                        {{ product.stock }} units
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover mt-2">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Quantity Added</th>
+                    <th>Date & Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for history in product.productHistories %}
+                <tr>
+                    <td>#{{ history.id }}</td>
+                    <td>
+                        <span class="badge bg-info text-dark">+ {{ history.quantity }}</span>
+                    </td>
+                    <td>{{ history.createdAt|date('F j, Y, g:i a') }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center py-5">
+                        <p class="text-muted mb-0">No stock history records found for this product.</p>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

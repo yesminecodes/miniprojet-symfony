@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Products: {{ subCategory.name }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Category: <span class="text-primary">{{ subCategory.name }}</span></h1>
+        <a href="{{ path('app_home') }}" class="btn btn-secondary btn-sm">Show All Products</a>
+    </div>
+
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ asset('uploads/images/' ~ product.image) }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ path('app_product_show_public', {'id': product.id}) }}" class="text-decoration-none text-dark fw-bold">
+                                {{ product.name }}
+                            </a>
+                        </h5>
+                        
+                        <p class="card-text text-muted small">
+                            {{ product.description|slice(0, 60) }}...
+                        </p>
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="h5 mb-0 text-success">{{ product.price }} €</span>
+                            <a href="#" class="btn btn-primary btn-sm">
+                                <i class="fas fa-shopping-cart"></i> Add
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted fs-4">No products found in this category yet.</p>
+                <a href="{{ path('app_home') }}" class="btn btn-primary">Back to Home</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

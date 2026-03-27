@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+
+    {% for order in orders %}
+    <h2>Order Number {{ order.id }}</h2>
+
+    <h5>Customer Information</h5>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>City</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ order.firstName }}</td>
+                <td>{{ order.lastName }}</td>
+                <td>{{ order.phone }}</td>
+                <td>{{ order.address }}</td>
+                <td>{{ order.city.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h5>Order Content</h5>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Product</th>
+                <th>Description</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for orderProduct in order.orderProducts %}
+            <tr>
+                <td>
+                    <img src="{{ orderProduct.product.image }}" width="80">
+                </td>
+                <td>{{ orderProduct.product.name }}</td>
+                <td>{{ orderProduct.product.description|slice(0, 200) }}</td>
+                <td>{{ orderProduct.product.price }} €</td>
+                <td>{{ orderProduct.quantity }}</td>
+                <td>{{ orderProduct.product.price * orderProduct.quantity }} €</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+<p>
+    <strong>Statut :</strong>
+    <span class="{{ order.isCompleted ? 'text-success' : 'text-danger' }}">
+        {{ order.isCompleted ? 'Delivered' : 'Not delivered' }}
+    </span>
+</p>
+<p>
+    <strong>Order Date :</strong>
+    {{ order.createdAt|date('d/m/Y H:i') }}
+</p>
+
+    <p><strong>Shipping Fees :</strong> {{ order.city.shippingCost }} €</p>
+    <p><strong>Total to Pay :</strong> {{ order.totalPrice }} €</p>
+
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success">{{ message }}</div>
+{% endfor %}
+{% for message in app.flashes('danger') %}
+    <div class="alert alert-danger">{{ message }}</div>
+{% endfor %}
+
+{% if order.isCompleted != true %}
+    <a href="{{ path('app_order_update', {'id': order.id, 'type': currentType}) }}" class="btn btn-success btn-sm">
+    Mark as Delivered
+</a>
+{% endif %}
+
+<a href="{{ path('app_order_remove', {'id': order.id}) }}"
+   class="btn btn-danger btn-sm ms-2"
+   onclick="return confirm('Do you really want to delete this order?')">
+    Delete Order
+</a>
+<a href="{{ path('app_bill', {'id': order.id}) }}"
+   class="btn btn-primary btn-sm ms-2"
+   target="_blank">
+    Print Invoice
+</a>
+
+    <br><br><br>
+    {% endfor %}
+
+    {{ knp_pagination_render(orders) }}
+
+</div>
+{% endblock %}

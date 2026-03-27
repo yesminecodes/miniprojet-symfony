@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New City{% endblock %}
+
+{% block body %}
+<div class="container categories-page mt-5">
+    <h1>
+        New City
+        <a href="{{ path('app_city_index') }}" class="btn btn-primary btn-sm">← Back to List</a>
+    </h1>
+
+    {{ include('city/_form.html.twig') }}
+</div>
+{% endblock %}
